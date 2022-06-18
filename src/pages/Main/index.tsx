@@ -125,7 +125,7 @@ export function MainPage() {
         <InputContainer>
           <MainTitle>Dados da empresa</MainTitle>
           <InputDiv>
-          Código da Empresa 
+            Código da Empresa
             <Input
               type="number"
               placeholder="Código da Empresa"
@@ -169,7 +169,7 @@ export function MainPage() {
         <InputContainer>
           <MainTitle>Dados da conta</MainTitle>
           <InputDiv>
-          Código da Empresa
+            Código da Empresa
             <Input
               type="number"
               min="0"
@@ -179,7 +179,7 @@ export function MainPage() {
             />
           </InputDiv>
           <InputDiv>
-          Código da conta
+            Código da conta
             <Input
               type="text"
               value={accountNumber}
