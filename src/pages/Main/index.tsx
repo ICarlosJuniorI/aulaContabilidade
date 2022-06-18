@@ -128,7 +128,7 @@ export function MainPage() {
             Código da Empresa
             <Input
               type="number"
-              placeholder="Código da Empresa"
+              // placeholder="Código da Empresa"
               min="0"
               max="99"
               value={companyNumber}
