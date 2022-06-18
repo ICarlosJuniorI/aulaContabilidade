@@ -125,7 +125,7 @@ export function MainPage() {
         <InputContainer>
           <MainTitle>Dados da empresa</MainTitle>
           <InputDiv>
-          Código da Empresa
+          Código da Empresa 
             <Input
               type="number"
               placeholder="Código da Empresa"
