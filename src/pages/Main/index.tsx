@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { accountCollectionRef, companyCollectionRef } from "../../firebase"
+import { accountCollectionRef, companyCollectionRef, db } from "../../firebase"
 import { Button } from "../../components/Button";
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import { Modal } from "../../components/Modal";
@@ -16,16 +16,18 @@ import {
   MainTitle,
   RadioDiv
 } from "./styles";
-import { addDoc, getDocs } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 
 export function MainPage() {
   const [showModalCompany, setShowModalCompany] = useState(false);
   const [showModalAccount, setShowModalAccount] = useState(false);
   const [showModalData, setShowModalData] = useState(false);
+
   const [companyId, setCompanyId] = useState(0);
   const [companyName, setCompanyName] = useState('');
   const [companyDescription, setCompanyDescription] = useState('');
+
   const [accountId, setAccountId] = useState(0);
   const [accountType, setAccountType] = useState('');
   const [accountDescription, setAccountDescription] = useState('');
@@ -33,36 +35,57 @@ export function MainPage() {
   const [companies, setCompanies]: any[] = useState([]);
   const [accounts, setAccounts]: any[] = useState([]);
 
-  useEffect(() => {
-    const getCompanies = async () => {
-      const data = await getDocs(companyCollectionRef);
-      setCompanies(data.docs.map((doc) => ({ ...doc.data(), companyId: doc.id })));
-    }
+  const getCompanies = async () => {
+    const data = await getDocs(companyCollectionRef);
+    setCompanies(data.docs.map((doc) => ({ ...doc.data(), companyId: doc.id })));
+    console.log(`DATA = ${JSON.stringify(data.docs)}`)
+  }
+
+  const showCompanies = () => {
     getCompanies();
+    setShowModalData(true);
+  }
 
-    const getAccounts = async () => {
-      const data = await getDocs(accountCollectionRef);
-      setAccounts(data.docs.map((doc) => ({ ...doc.data(), accountId: doc.id })));
-    }
-    getAccounts();
-  }, []);
+  const getAccounts = async () => {
+    const data = await getDocs(accountCollectionRef);
+    setAccounts(data.docs.map((doc) => ({ ...doc.data(), accountId: doc.id })));
+  }
 
+  //Cadastrar uma nova empresa
   const registerCompany = async () => {
     const company = await addDoc(companyCollectionRef, {
       companyId, companyName, companyDescription
     });
 
     companies.push(company);
+    showCompanies();
+    // console.log(`Empresas = ${JSON.stringify(companies)}`);
   }
 
+  //Cadastrar uma nova conta
   const registerAccount = async () => {
     const account = await addDoc(accountCollectionRef, {
       accountId, accountDescription, accountType, companyId
     })
 
     accounts.push(account);
+    console.log(`Contas = ${JSON.stringify(accounts)}`);
+
   }
 
+  //Deletar empresa
+  const deleteCompany = async (companyId: any) => {
+    const company = doc(db, 'companies', companyId);
+    await deleteDoc(company);
+  }
+
+  //Deletar conta
+  const deleteAccount = async (accountId: any) => {
+    const account = doc(db, 'accounts', accountId);
+    await deleteDoc(account);
+  }
+
+  //Abrir e fechar os modais
   const openModalCompany = () => {
     setShowModalCompany(prevState => !prevState);
   }
@@ -87,6 +110,7 @@ export function MainPage() {
     setShowModalData(prevState => !prevState);
   }
 
+  //Handlers
   const handleCompanyId = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setCompanyId(e.currentTarget.valueAsNumber);
@@ -139,8 +163,6 @@ export function MainPage() {
     setAccountType('');
   }
 
-  console.log(JSON.stringify(accounts))
-
   return (
     <Container>
       <MainTitle>CADASTRAR EMPRESA / CONTA</MainTitle>
@@ -152,7 +174,7 @@ export function MainPage() {
           Nova Conta
         </Button>
         <Button type="button" onClick={openModalData}>
-          Ver Empresas Cadastradas
+          Cadastros
         </Button>
       </ButtonContainer>
 
@@ -261,19 +283,12 @@ export function MainPage() {
           </InputDiv>
         </InputContainer>
       </Modal>
-      <Modal
+      {/* <Modal
         onClick={closeModalData}
         showModal={showModalData}
         setShowModal={setShowModalData}
       >
-        <ContainerMap>
-          {accounts.map((a: any) => {
-            <div>
-              <h1>Descrição Conta: {a.accountDescription}</h1>
-            </div>
-          })}
-        </ContainerMap>
-      </Modal>
+      </Modal> */}
     </Container>
   );
 }
