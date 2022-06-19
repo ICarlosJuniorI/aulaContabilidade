@@ -19,10 +19,6 @@ export const ButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 30px;
-
-  button + button {
-    margin-bottom: 50px;
-  }
 `;
 
 export const MainTitle = styled.h1`
@@ -73,4 +69,14 @@ export const Label = styled.label`
   font-size: 20px;
   font-weight: bold;
   margin-right: 10px;
+`;
+
+export const ContainerMap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  ul {
+    margin-bottom: 50px;
+  }
 `;
